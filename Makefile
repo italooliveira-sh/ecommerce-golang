@@ -1,3 +1,8 @@
+ifneq (,$(wildcard .env))
+	include .env
+	export
+endif
+
 .PHONY: run dev build test lint migrate-up migrate-down sqlc docker-up docker-down
 
 run:
