@@ -70,14 +70,23 @@ Go · chi (router) · pgx + sqlc (banco) · goose (migrations) · PostgreSQL · 
 
 ### Ordem de desenvolvimento planejada
 
-1. Setup: `go mod init`, `docker-compose.yml`, primeira migration
-2. Migrations na ordem de dependência (users → categories → products → orders)
-3. Queries SQL no `sqlc/queries/` e geração do código
-4. Interfaces de repository
-5. Services com TDD, começando por `auth_service` e `user_service`
-6. Handlers e rotas
-7. Catálogo completo
-8. Fluxo de pedidos (o mais complexo, por último)
+Desenvolvimento em **fatias verticais (vertical slices)**: cada domínio é entregue de ponta a ponta antes de começar o próximo. Não construir todas as migrations primeiro, depois todas as queries, etc.
+
+**Domínios na ordem:**
+1. ✅ Setup: `go mod init`, `docker-compose.yml`, primeira migration
+2. **Identidade** (`users` + `addresses`) — em andamento
+3. **Catálogo** (`categories` → `products` → `variants` → `inventory`)
+4. **Vendas** (`orders` → `order_items` → `order_status_history` → `reviews`)
+
+**Ciclo dentro de cada domínio:**
+1. Migration(s) do domínio
+2. Queries SQL em `sqlc/queries/`
+3. `make sqlc` — gera o código Go
+4. Interface de repository em `internal/repository/`
+5. Service com TDD em `internal/service/` (Red → Green → Refactor)
+6. Handler em `internal/handler/`
+7. Rotas em `internal/handler/router.go`
+8. Teste end-to-end do fluxo completo
 
 ## Resumo
 

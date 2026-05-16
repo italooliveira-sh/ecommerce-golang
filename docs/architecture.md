@@ -225,6 +225,41 @@ func (h *OrderHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 ---
 
+## Fluxo de desenvolvimento por domínio (vertical slices)
+
+O projeto é construído em fatias verticais: cada domínio vai do banco até o HTTP antes de começar o próximo. Isso simula o ambiente real de equipes de produto e evita a armadilha de ter 11 migrations prontas mas nenhuma feature funcionando.
+
+### Ciclo por domínio
+
+```
+1. migration(s)
+      ↓
+2. queries SQL  →  sqlc/queries/<domínio>.sql
+      ↓
+3. make sqlc    →  gera sqlc/generated/
+      ↓
+4. repository   →  internal/repository/<domínio>_repository.go  (interface)
+      ↓
+5. service TDD  →  internal/service/<domínio>_service.go
+   Red → Green → Refactor
+      ↓
+6. handler      →  internal/handler/<domínio>_handler.go
+      ↓
+7. rotas        →  internal/handler/router.go
+      ↓
+8. teste E2E do fluxo completo
+```
+
+### Domínios e estado
+
+| domínio | migrations | queries | service | handler |
+|---|---|---|---|---|
+| identidade (users + addresses) | ✅ | — | — | — |
+| catálogo (categories → inventory) | — | — | — | — |
+| vendas (orders → reviews) | — | — | — | — |
+
+---
+
 ## Makefile — comandos principais
 
 ```makefile
