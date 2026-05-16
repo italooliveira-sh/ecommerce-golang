@@ -27,7 +27,7 @@ migrate-down:
 	goose -dir migrations postgres "$(DATABASE_URL)" down
 
 sqlc:
-	sqlc generate
+	sqlc generate --file sqlc/sqlc.yaml
 
 docker-up:
 	docker compose up -d
