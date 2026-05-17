@@ -23,6 +23,18 @@ type User struct {
 	UpdatedAt    time.Time
 }
 
+func NewUser(name string, email string, passwordHash string) *User {
+	return &User{
+		ID:           uuid.New(),
+		Name:         name,
+		Email:        email,
+		PasswordHash: passwordHash,
+		Role:         UserRoleCustomer,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
+	}
+}
+
 type Address struct {
 	ID        uuid.UUID
 	UserID    uuid.UUID

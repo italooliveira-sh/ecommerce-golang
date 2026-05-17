@@ -2,10 +2,13 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/italooliveira-sh/ecommerce-golang/internal/domain"
 )
+
+var ErrNotFound = errors.New("Error Not Found")
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *domain.User) (domain.User, error)
